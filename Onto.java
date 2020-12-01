@@ -200,7 +200,7 @@ public class Onto {
     /**
      * @param node - node to check type of.
      * @param typeName - name of the type defining node.
-     * @return true if node has is_a connection with node of given name (say, has given type), false otherwise.
+     * @return true if node has direct is_a connection with node of given name (say, has given type), false otherwise.
      */
     public boolean isNodeOfType(Node node, String typeName) {
         ArrayList<Node> protos = getNodesLinkedFrom(node, "is_a");
@@ -210,6 +210,70 @@ public class Onto {
             }
         }
         return false;
+    }
+
+    /**
+     * @param node - node to check type of.
+     * @param typeName - name of the type defining node.
+     * @return true if node has is_a connection with node of given name (say, has given type) at any inheritance level, false otherwise.
+     */
+    public boolean isNodeOfTypeRecursive(Node node, String typeName) {
+        boolean result = false;
+        ArrayList<Node> protos = getNodesLinkedFrom(node, "is_a");
+        for (int i = 0, n = protos.size(); i < n; ++i) {
+            if (protos.get(i).getName().equals(typeName)) {
+                result = true;
+                break;
+            } else {
+                result = isNodeOfTypeRecursive(protos.get(i), typeName);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * @param node - node to check type of.
+     * @param linkName - name of the relation.
+     * @param typeName - name of the type defining node.
+     * @return true if node has connection (link) with given name with another node,
+     * which is connected by is_a to the node with given name (say, has given type) at any inheritance level, false otherwise.
+     * The direction of relation (link) is from the given node to nodes returned.
+     */
+    public boolean isNodeOfTypeRecursiveFrom(Node node, String linkName, String typeName) {
+        boolean result = false;
+        ArrayList<Node> linked = getNodesLinkedFrom(node, linkName);
+        for (int i = 0, n = linked.size(); i < n; ++i) {
+            Node lNode = linked.get(i);
+            if (isNodeOfTypeRecursive(lNode, typeName)) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * @param node - node to check type of.
+     * @param linkName - name of the relation.
+     * @param typeName - name of the type defining node.
+     * @return true if node has connection (link) with given name with another node,
+     * which is connected by is_a to the node with given name (say, has given type) at any inheritance level, false otherwise.
+     * The direction of relation (link) is from nodes returned to the given node.
+     */
+    public boolean isNodeOfTypeRecursiveTo(Node node, String linkName, String typeName) {
+        boolean result = false;
+        ArrayList<Node> linked = getNodesLinkedTo(node, linkName);
+        for (int i = 0, n = linked.size(); i < n; ++i) {
+            Node lNode = linked.get(i);
+            if (isNodeOfTypeRecursive(lNode, typeName)) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
     }
 
     /**
