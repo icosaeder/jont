@@ -152,7 +152,7 @@ public class Onto {
     /**
      * @param node - node to find relations from.
      * @param linkName - name of the relation.
-     * @param nodeType - name of the type defining node.
+     * @param typeName - name of the type defining node.
      * @return array of nodes, which are connected with the given one by the relation (link) with given name
      * and are connected by is_a to the node with given name (say, have given type).
      * The direction of relation (link) is from the given node to nodes returned.
@@ -176,7 +176,7 @@ public class Onto {
     /**
      * @param node - node to find relations to.
      * @param linkName - name of the relation.
-     * @param nodeType - name of the type defining node.
+     * @param typeName - name of the type defining node.
      * @return array of nodes, which are connected with the given one by the relation (link) with given name
      * and are connected by is_a to the node with given name (say, have given type).
      * The direction of relation (link) is from nodes returned to the given node.
@@ -199,7 +199,7 @@ public class Onto {
 
     /**
      * @param node - node to check type of.
-     * @param nodeType - name of the type defining node.
+     * @param typeName - name of the type defining node.
      * @return true if node has is_a connection with node of given name (say, has given type), false otherwise.
      */
     public boolean isNodeOfType(Node node, String typeName) {
